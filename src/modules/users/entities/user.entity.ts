@@ -1,1 +1,91 @@
-export class User {}
+import { Table, Column, Model, DataType, CreatedAt, DeletedAt, UpdatedAt, PrimaryKey, AutoIncrement, Default } from 'sequelize-typescript';
+
+export enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
+export enum UserType {
+  ADMIN = 'admin',
+  USER = 'user',
+  VIEWER = 'viewer',
+  OTHER = 'other',
+}
+@Table({
+  tableName: 'Users',
+  paranoid: true,
+  timestamps: true,
+})
+export class User extends Model<User> {
+
+  @PrimaryKey
+  @AutoIncrement
+  @Column({ type: DataType.INTEGER })
+  public id: number;
+
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  name: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false
+  })
+  contact: number;
+
+  @Column({
+    allowNull: false,
+    validate: {
+      isEmail: true,
+    },
+    type: DataType.STRING,
+  })
+  email: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  password: string
+
+  @Column({
+    type: DataType.ENUM(...Object.values(UserRole)),
+    defaultValue: UserRole.USER,
+  })
+  role: UserRole
+
+  @Column({
+    type: DataType.ENUM(...Object.values(UserType)),
+    defaultValue: UserType.USER,
+  })
+  type: UserType;
+
+  @Default(true)
+  @Column({
+    type: DataType.BOOLEAN,
+  })
+  isActive: boolean;
+
+  @Default(false)
+  @Column({
+    type: DataType.BOOLEAN,
+  })
+  isDeleted: boolean;
+
+  @CreatedAt public createdAt: Date;
+
+  @UpdatedAt public updatedAt: Date;
+
+  @DeletedAt public deletedAt: Date;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  createdBy: string;
+
+}
+

@@ -1,6 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { User } from 'src/modules/users/entities/user.entity';
 
-@Controller('auth/login')
+@Controller('auth')
 export class AuthController {
 
     @Get('')
@@ -15,5 +16,7 @@ export class AuthController {
        }]
     }
 
-    
+    @Post('')
+    Login(@Body() payload: Partial<User>){}
+
 }
