@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Table, Column, Model, DataType, CreatedAt, DeletedAt, UpdatedAt, PrimaryKey, AutoIncrement, Default } from 'sequelize-typescript';
 
 export enum UserRole {
@@ -20,22 +21,25 @@ export class User extends Model<User> {
 
   @PrimaryKey
   @AutoIncrement
+  @ApiProperty()
   @Column({ type: DataType.INTEGER })
   public id: number;
 
-
+  @ApiProperty()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
   name: string;
 
+  @ApiProperty()
   @Column({
     type: DataType.STRING,
     allowNull: false
   })
   contact: number;
 
+  @ApiProperty()
   @Column({
     allowNull: false,
     validate: {
@@ -45,17 +49,20 @@ export class User extends Model<User> {
   })
   email: string;
 
+  @ApiProperty()
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  password: string
+  password: string;
 
+  @ApiProperty()
   @Column({
     type: DataType.ENUM(...Object.values(UserRole)),
     defaultValue: UserRole.USER,
   })
-  role: UserRole
+  role: UserRole;
+
 
   @Column({
     type: DataType.ENUM(...Object.values(UserType)),
