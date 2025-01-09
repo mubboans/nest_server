@@ -2,7 +2,7 @@ import { IsEmail, IsNotEmpty } from "class-validator";
 
 export class CreateUserDto {
 
-  @IsNotEmpty({ message: 'Name Cannot be empty' })
+  @IsNotEmpty({ message: 'Name Cannot be empty custom' })
   name: string;
 
   contact: string;
