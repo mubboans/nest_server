@@ -1,12 +1,11 @@
 export class CustomError extends Error {
   constructor(
-    public readonly message: string,
-    public readonly statusCode: number = 500,
-    public readonly errorCode?: string,
-    public readonly errors?: any[]
+    public message: string,
+    public code: number,
+    public error?: any,
+    public status: string = 'Failed',
   ) {
     super(message);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+    this.name = 'CustomError';
   }
 }

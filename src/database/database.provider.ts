@@ -1,48 +1,24 @@
-
-import { Sequelize } from 'sequelize-typescript';
-import { User } from 'src/modules/users/entities/user.entity';
-
-console.log('Database Config:', {
-  dialect: process.env.DB_DIALECT,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-});
+import { ConfigService } from '@nestjs/config';
+import { SequelizeModuleOptions } from '@nestjs/sequelize';
+import { User } from './entities/user.entity';
+import { VARIABLE_CONSTANTS } from 'src/common/constants/variable_contants';
 
 export const databaseProviders = [
-  {
-    provide: process.env.SEQUELIZE,
-    useFactory: async () => {
-      const sequelize = new Sequelize({
-        dialect: process.env.DB_DIALECT as 'mysql',
-        host: process.env.DB_HOST,
-        port: parseInt(process.env.DB_PORT),
-        username: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-      });
-      sequelize.addModels([User]);
-      try {
-        sequelize.authenticate();
-      } catch (error) {
-        throw error;
-      }
-      await sequelize.sync({ alter: false });
-
-      return sequelize;
-    },
+{
+    provide: VARIABLE_CONSTANTS.SEQUELIZE_CONFIG,
+  inject: [ConfigService],
+  useFactory: async (configService: ConfigService): Promise<SequelizeModuleOptions> => {
+    return {
+      dialect: VARIABLE_CONSTANTS.MYSQL as 'mysql',
+      host: configService.get<string>('DB_HOST'),
+      port: configService.get<number>('DB_PORT'),
+      username: configService.get<string>('DB_USER'),
+      password: configService.get<string>('DB_PASSWORD'),
+      database: configService.get<string>('DB_NAME'),
+      autoLoadModels: VARIABLE_CONSTANTS.AUTO_LOAD_MODULE,
+      synchronize: VARIABLE_CONSTANTS.SYNCHRONIZE,
+      models: [User],
+    };
   },
-];
-
-export const sequelizeModuleProvider = {
-  dialect: process.env.DB_DIALECT as 'mysql' || 'mysql',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  models: [User],
-  synchronize: true,
 }
+];
