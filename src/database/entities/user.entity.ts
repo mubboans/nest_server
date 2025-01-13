@@ -92,7 +92,7 @@ export class User extends Model<User> {
     type: DataType.STRING,
     allowNull: true,
   })
-  createdBy: string;
+  createdBy: number;
 
 }
 
