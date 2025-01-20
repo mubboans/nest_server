@@ -10,7 +10,7 @@ export const databaseProviders = [
   useFactory: async (configService: ConfigService): Promise<SequelizeModuleOptions> => {
     return {
       dialect: VARIABLE_CONSTANTS.MYSQL as 'mysql',
-      host: configService.get<string>('DB_HOST'),
+      host: configService.get<string>('DB_HOST') || 'host.docker.internal',
       port: configService.get<number>('DB_PORT'),
       username: configService.get<string>('DB_USER'),
       password: configService.get<string>('DB_PASSWORD'),

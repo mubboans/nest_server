@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { RouteNotFoundMiddleware } from './common/middlewares/route-not-found.middleware';
+import { GlobalExceptionFilter } from './common/filters/global-exception/global-exception.filter';
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
@@ -15,6 +16,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
   await app.listen(process.env.PORT ?? 3002);
+  app.useGlobalFilters(new GlobalExceptionFilter());
   app.use(new RouteNotFoundMiddleware().use);
 }
 bootstrap();

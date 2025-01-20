@@ -1,17 +1,18 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { User } from 'src/database/entities/user.entity';
+import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { Response } from 'express'
 import { AuthService } from './auth.service';
+import { LoginDto, RegisterDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
   @Post('/login')
-  Login(@Body() payload: Partial<User>) {
-    this.authService.Login(payload);
+  Login(@Res() res: Response, @Body() payload: LoginDto) {
+    this.authService.Login(res,payload);
   }
 
   @Post('/register')
-  Register(@Body() payload: Partial<User>) {
+  Register(@Body() payload: RegisterDto) {
     this.authService.Register(payload);
   }
 

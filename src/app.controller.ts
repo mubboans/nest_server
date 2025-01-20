@@ -3,7 +3,6 @@ import { AppService } from './app.service';
 import { Request, Response } from 'express';
 @Controller()
 export class AppController {
-  private readonly logger = new Logger(AppController.name);
   constructor(private readonly appService: AppService) { }
 
   @Get('/health-check')
