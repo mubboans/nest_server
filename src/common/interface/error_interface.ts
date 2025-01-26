@@ -1,8 +1,7 @@
 export interface ErrorResponse {
-  success: boolean;
+  statusCode: number;
   message: string;
+  error?: string;
   errorCode?: string;
-  errors?: any[];
   timestamp: string;
-  path: string;
 }

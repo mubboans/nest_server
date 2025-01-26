@@ -1,11 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, getUsetDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiCreatedResponse, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from '../../database/entities/user.entity';
 import { Response } from 'express';
 
+@ApiTags('Users')
+@ApiBearerAuth('JWT-auth')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
@@ -18,7 +20,9 @@ export class UsersController {
   @Get()
   @ApiCreatedResponse(
     {
-      type:Array<User>
+      type: getUsetDto,
+      isArray:true,
+      description: 'Sample all user payload',
     }
   )
   findAll(@Res() res: Response) {

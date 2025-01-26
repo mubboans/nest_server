@@ -1,13 +1,19 @@
 import { CreateOptions, FindOptions, Model } from 'sequelize';
-import { CustomError } from '../error/custom-error-class';
 import { Request } from 'express';
+import { HttpStatus } from '@nestjs/common';
+import { CustomHttpException } from '../error/custom-http-exception';
 
-export async function fnPost<T>(model: any, data: any, options: any) {
+export async function fnPost<T>(model: any, data: any, options?: any) {
   try {
     const dataCreated = await model.create(data, options);
     return dataCreated;
   } catch (error) {
-    throw new CustomError('Error in creating data', error);
+    throw new CustomHttpException(
+      error?.message ?? 'Error in creating data',
+      'SYSTEM',
+      'DB',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
 
@@ -58,11 +64,16 @@ export async function fnGet<T>(model: any, query?: any, include = [], raw: boole
       return { config: {}, data };
     }
   } catch (error) {
-    throw new CustomError(error?.message, 500)
+    throw new CustomHttpException(
+      error?.message ?? 'Error in getting data',
+      'SYSTEM',
+      'DB',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }
 
-export async function fnPut(model: any, obj: any, condition: any) {
+export async function fnUpdate(model: any, obj: any, condition: any) {
   try {
     const data = await model.update(obj, { where: condition });
     console.log(data, 'data check');
@@ -70,24 +81,44 @@ export async function fnPut(model: any, obj: any, condition: any) {
       return true
     }
     else {
-      throw new CustomError('No Record Found To Update', 404)
+      throw new CustomHttpException(
+        'No Record Found To Update',
+        'SYSTEM',
+        'DB',
+        HttpStatus.NOT_FOUND,
+      );
     }
   } catch (error) {
-    throw new CustomError(error?.message, error?.code ? error?.code : 500)
+    throw new CustomHttpException(
+      error?.message ?? "Failed to Update Record",
+      'SYSTEM',
+      'DB',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
 
 export async function fnDelete(model: any, condition: any) {
   try {
-    const data = await model.destroy({ where: condition, logging: console.log });
+    const data = await model.destroy({ where: condition});
     console.log(data, 'data check');
     if (data == 1 || data > 1) {
       return true
     }
     else {
-      throw new CustomError('No Record Found To Delete', 404)
+      throw new CustomHttpException(
+        'No Record Found To Delete',
+        'SYSTEM',
+        'DB',
+        HttpStatus.NOT_FOUND,
+      );
     }
   } catch (error) {
-    throw new CustomError(error?.message, error?.code ? error?.code : 500)
+    throw new CustomHttpException(
+      error?.message ?? "Failed to Delete Record",
+      'SYSTEM',
+      'DB',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 }

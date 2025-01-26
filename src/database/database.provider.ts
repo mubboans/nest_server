@@ -2,6 +2,10 @@ import { ConfigService } from '@nestjs/config';
 import { SequelizeModuleOptions } from '@nestjs/sequelize';
 import { User } from './entities/user.entity';
 import { VARIABLE_CONSTANTS } from 'src/common/constants/variable_contants';
+import { Student } from './entities/student.entity';
+import { Employee } from './entities/employee.entity';
+import { Education } from './entities/education.entity';
+import { Experience } from './entities/experience.entity';
 
 export const databaseProviders = [
 {
@@ -17,7 +21,7 @@ export const databaseProviders = [
       database: configService.get<string>('DB_NAME'),
       autoLoadModels: VARIABLE_CONSTANTS.AUTO_LOAD_MODULE,
       synchronize: VARIABLE_CONSTANTS.SYNCHRONIZE,
-      models: [User],
+      models: [User,Student,Employee,Education,Experience],
     };
   },
 }

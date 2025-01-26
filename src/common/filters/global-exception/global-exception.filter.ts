@@ -1,47 +1,33 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { CustomError } from 'src/common/error/custom-error-class';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { CustomHttpException } from 'src/common/error/custom-http-exception';
+// Adjust path as necessary
 
-@Catch()
-export class GlobalExceptionFilter<T> implements ExceptionFilter {
+@Catch(HttpException)
+export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
+    const response = ctx.getResponse();
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // Check if the exception is an instance of CustomError
-    if (exception instanceof CustomError) {
-      return response.status(exception.code || 500).json({
-        status: exception.status || 'Failed',
-        message: exception.message,
-        error: exception.error || null,
-        timestamp: new Date().toISOString(),
-        path: request.url,
-      });
-    }
-
-    // Handle other exceptions (e.g., HttpException)
-    if (exception instanceof HttpException) {
-      const status = exception.getStatus();
-      const responseBody = exception.getResponse();
-      return response.status(status).json({
-        status: 'Failed',
-        message: typeof responseBody === 'string' ? responseBody : (responseBody as any).message,
-        timestamp: new Date().toISOString(),
-        path: request.url,
-      });
-    }
-
-    // Fallback for unhandled exceptions
-    console.error('Unhandled exception:', exception);
-    return response.status(500).json({
-      status: 'Failed',
-      message: 'Internal Server Error',
-      error: exception.message || null,
+    const errorResponse = {
+      statusCode: status,
+      message: exception?.message || 'Internal Server Error',
+      errorCode: exception.errorCode || 'Server',
       timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+      path: ctx.getRequest().url,
+    };
+
+    console.error('Exception caught:', errorResponse);
+
+    response.status(status).json(errorResponse);
   }
-
-
 }

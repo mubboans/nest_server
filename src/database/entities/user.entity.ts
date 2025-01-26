@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Table, Column, Model, DataType, CreatedAt, DeletedAt, UpdatedAt, PrimaryKey, AutoIncrement, Default } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, CreatedAt, DeletedAt, UpdatedAt, PrimaryKey, AutoIncrement, Default, HasOne } from 'sequelize-typescript';
+import { Employee } from './employee.entity';
+import { Student } from './student.entity';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -63,12 +65,16 @@ export class User extends Model<User> {
   })
   role: UserRole;
 
-
   @Column({
     type: DataType.ENUM(...Object.values(UserType)),
     defaultValue: UserType.USER,
   })
   type: UserType;
+
+  @Column({
+    defaultValue: "https://ucarecdn.com/0d26e991-266c-491f-a842-6e2874527e9a/userprofile.jpg"
+  })
+  profileImg: string
 
   @Default(true)
   @Column({
@@ -94,5 +100,11 @@ export class User extends Model<User> {
   })
   createdBy: number;
 
+
+  @HasOne(() => Employee)
+  employee: Employee;
+
+  @HasOne(() => Student)
+  student: Student;
 }
 

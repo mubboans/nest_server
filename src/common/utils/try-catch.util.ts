@@ -1,4 +1,6 @@
-import { CustomError } from "../error/custom-error-class";
+import { HttpStatus } from "@nestjs/common";
+import { CustomHttpException } from "../error/custom-http-exception";
+
 
 export const TryCatch = <T>(func: (...args: any[]) => Promise<T>) => {
   return async (...args: any[]) => {
@@ -6,12 +8,19 @@ export const TryCatch = <T>(func: (...args: any[]) => Promise<T>) => {
       return await func(...args);
     } catch (error) {
       console.error('Error caught in TryCatch:', error);
-      // Handle known error types
-      if (error instanceof CustomError) {
-        return new CustomError(error.message, error.code || 400);
+
+      // Re-throw known exceptions
+      if (error instanceof CustomHttpException) {
+        throw error;
       }
-      // Handle unknown errors
-      return new CustomError('Internal Server Error', 503);
+
+      // Wrap unknown exceptions in a CustomHttpException
+      throw new CustomHttpException(
+        error?.message || 'Unexpected error occurred',
+        'SYSTEM',
+        'UNKNOWN',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   };
 };

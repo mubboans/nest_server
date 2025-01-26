@@ -3,7 +3,7 @@ import { ResponseHelperService } from '../services/response-helper.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtHelperService } from '../services/jwt-helper.service';
-import { ErrorService } from '../error/error.service';
+import { MODEL_PROVIDERS } from 'src/database/entities/entity.provider';
 
 @Module({
   imports:[JwtModule.registerAsync({
@@ -15,8 +15,8 @@ import { ErrorService } from '../error/error.service';
     inject: [ConfigService],
   })],
   controllers:[],
-  providers: [ResponseHelperService, JwtHelperService, ErrorService],
-  exports: [ResponseHelperService, JwtHelperService, ErrorService]
+  providers: [ResponseHelperService, JwtHelperService, ...MODEL_PROVIDERS],
+  exports: [ResponseHelperService, JwtHelperService, ...MODEL_PROVIDERS]
 })
 export class SharedModule {
 

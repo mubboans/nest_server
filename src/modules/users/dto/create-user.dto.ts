@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
-import { UserRole } from "../../../database/entities/user.entity";
+import { UserRole, UserType } from "../../../database/entities/user.entity";
 
 export class CreateUserDto {
   @ApiProperty()
@@ -17,14 +17,34 @@ export class CreateUserDto {
   password: string;
 
   @ApiProperty()
-  role: string;
+  role: UserRole;
 
   @ApiProperty()
-  type: UserRole;
+  type: UserType;
 
   isActive: boolean;
   isDeleted: boolean;
   createdDate: Date;
   updatedDate: Date;
   createdBy: string;
+}
+
+export class getUsetDto{
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  contact: string;
+
+  @ApiProperty()
+  role: UserRole;
+
+  @ApiProperty()
+  type: UserType;
+
+  @ApiProperty()
+  isActive: boolean;
 }
