@@ -10,7 +10,7 @@ export class AuthController {
   @Post('/login')
   async Login(@Res() res: Response, @Body() payload: LoginDto): Promise<any> {
     try {
-      const loginData =await this.authService.Login(res,payload);
+      const loginData =await this.authService.Login(payload);
       return this.responseHelper.returnResponse(res, 201, 'Succesfully Login user', loginData);
     } catch (error) {
       throw error;
@@ -20,7 +20,7 @@ export class AuthController {
   @Post('/register')
   async Register(@Res() res: Response, @Body() payload: RegisterDto): Promise<any> {
     try {
-      let registerResponse = await this.authService.Register(res, payload);
+      let registerResponse = await this.authService.Register(payload);
       return this.responseHelper.returnResponse(res, 201, 'Succesfully Register user', registerResponse);
     } catch (error) {
       throw error
@@ -28,7 +28,12 @@ export class AuthController {
   }
 
   @Post('/forgor-password')
-  ForgotPassword(@Res() res: Response, payload: ForgotPassword) {
-    this.authService.ForgotPassword(res, payload);
+  async ForgotPassword(@Res() res: Response, payload: ForgotPassword): Promise<any> {
+    try {
+      const response = await this.authService.ForgotPassword(payload);
+      return this.responseHelper.returnResponse(res,200,"Successfully Change Password")
+    } catch (error) {
+      throw error
+    }
   }
 }

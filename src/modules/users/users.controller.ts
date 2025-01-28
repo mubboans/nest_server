@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UsePipes, Res, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, getUsetDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBearerAuth, ApiCreatedResponse, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from '../../database/entities/user.entity';
+import { ApiBearerAuth, ApiCreatedResponse, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @ApiTags('Users')
@@ -18,6 +17,8 @@ export class UsersController {
   }
 
   @Get()
+  @ApiQuery({ name: 'page', type: 'number', required: false, default: 1 })
+  @ApiQuery({ name: 'limit', type: 'number', required: false, default: 10 })
   @ApiCreatedResponse(
     {
       type: getUsetDto,
@@ -25,8 +26,8 @@ export class UsersController {
       description: 'Sample all user payload',
     }
   )
-  findAll(@Res() res: Response) {
-    return this.usersService.findAll(res);
+  findAll(@Query('page') page: number, @Query('limit') limit: number, @Res() res: Response) {
+    return this.usersService.findAll(page || 1,limit || 10, res);
   }
 
   @Get(':id')

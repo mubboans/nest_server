@@ -11,8 +11,7 @@ export enum UserRole {
 export enum UserType {
   ADMIN = 'admin',
   USER = 'user',
-  VIEWER = 'viewer',
-  OTHER = 'other',
+  STAFF = 'staff',
 }
 @Table({
   tableName: 'Users',

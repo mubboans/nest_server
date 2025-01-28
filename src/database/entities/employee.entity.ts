@@ -19,7 +19,6 @@ export class Employee extends Model<Employee> {
 
   @PrimaryKey
   @AutoIncrement
-  @ApiProperty()
   @Column({ type: DataType.INTEGER })
   public id: number;
 

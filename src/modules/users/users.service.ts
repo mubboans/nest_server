@@ -16,8 +16,8 @@ export class UsersService {
     return this.responseHelper.returnResponse(res,201,'Successfully Created User',{})
   }
 
-  async findAll(res: Response) {
-    let {data:AllUser} = await fnGet(this.userModel, { attribute: { exclude: ['password'] }, });
+  async findAll(offset: number, limit: number, res: Response) {
+    let { data: AllUser } = await fnGet(this.userModel, { offset, limit, attribute: { exclude: ['password'] }, });
     return this.responseHelper.returnResponse(res, 200, 'Succesfully Get User', AllUser);
   }
 

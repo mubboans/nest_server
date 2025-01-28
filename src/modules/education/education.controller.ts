@@ -1,14 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { EducationService } from './education.service';
-import { CreateEducationDto } from './dto/create-education.dto';
 import { UpdateEducationDto } from './dto/update-education.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { DonationDTO } from './dto/create-education.dto';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('education')
 export class EducationController {
   constructor(private readonly educationService: EducationService) {}
 
   @Post()
-  create(@Body() createEducationDto: CreateEducationDto) {
+  create(@Body() createEducationDto: DonationDTO) {
     return this.educationService.create(createEducationDto);
   }
 

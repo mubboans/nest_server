@@ -18,7 +18,7 @@ export class AuthService {
   constructor(@Inject(MODEL_CONSTANTS.USER) private userModel: typeof User,
     private readonly responseHelper: ResponseHelperService, private jwtHelper: JwtHelperService) { }
 
-  async Login(res: Response, payload: LoginDto): Promise<any> {
+  async Login(payload: LoginDto): Promise<any> {
     const { data } = await fnGet(
       this.userModel,
       {
@@ -66,16 +66,16 @@ export class AuthService {
       type: data[0].type,
     });
 
-    return this.responseHelper.returnResponse(res, 200, 'Successfully logged in', {
+    return {
       id: data[0].id,
       email: data[0].email,
       role: data[0].role,
       type: data[0].type,
       accessToken:createToken,
-    });
+    };
   }
 
-  async Register (res: Response, payload: RegisterDto) :Promise<any> {
+  async Register (payload: RegisterDto) :Promise<any> {
     let checkUser = await this.IsUserRegister({ email: payload.email });
     if (checkUser) {
       throw new CustomHttpException(
@@ -94,7 +94,7 @@ export class AuthService {
 
   }
 
-  async ForgotPassword(res: Response, payload: ForgotPassword) {
+  async ForgotPassword(payload: ForgotPassword) {
 
   }
 
