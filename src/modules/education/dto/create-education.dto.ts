@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class DonationDTO {
-  @ApiProperty()
-  organizationID: string;
+export class CreateEducationDto {
+
 
   @ApiProperty()
   receiptNo: number;

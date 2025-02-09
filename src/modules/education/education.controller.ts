@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { EducationService } from './education.service';
 import { UpdateEducationDto } from './dto/update-education.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { DonationDTO } from './dto/create-education.dto';
+import { CreateEducationDto } from './dto/create-education.dto';
 
 @ApiBearerAuth('JWT-auth')
 @Controller('education')
@@ -10,7 +10,7 @@ export class EducationController {
   constructor(private readonly educationService: EducationService) {}
 
   @Post()
-  create(@Body() createEducationDto: DonationDTO) {
+  create(@Body() createEducationDto: CreateEducationDto) {
     return this.educationService.create(createEducationDto);
   }
 
